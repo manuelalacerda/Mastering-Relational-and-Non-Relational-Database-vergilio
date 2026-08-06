@@ -1,0 +1,66 @@
+//Crie uma tabela para cadastro de funcionarios que contenha os seguintes atributos:
+id
+nome
+departamento
+salario
+
+em seguida crie uma procedure que faça insert nesta tabela
+
+insira 4 funcionarios
+
+depois crie uma função para fazer o calculo de desconto do inss que é de 6% do 
+salario de cada funcionario.
+
+
+
+create table funcionarios10(
+id number primary key,
+nome varchar2(30),
+departamento varchar2(30),
+salario NUMBER
+);
+
+
+CREATE OR REPLACE procedure prd_insert_funcionarios (p_id number, p_nome varchar2,p_departamento varchar2,p_salario NUMBER)AS
+BEGIN
+INSERT INTO funcionarios10 (
+    id,
+    nome,
+    departamento,
+    salario
+) VALUES ( p_id,
+           p_nome,
+           p_departamento,
+           p_salario );
+
+COMMIT;
+
+end;
+
+
+call prd_insert_funcionarios(1,'Manuela', 'Limpeza',10);
+exec prd_insert_funcionarios(2,'Natalia', 'Financeiro',9);
+execute prd_insert_funcionarios(3,'Ester', 'Gestao',8);
+
+begin
+    prd_insert_funcionarios(4,'Felipe', 'Vendedor',7);
+end;
+
+
+CREATE OR REPLACE FUNCTION inss_funcionario(
+    p_nome VARCHAR2
+) RETURN NUMBER IS
+    v_desconto NUMBER;
+BEGIN
+    SELECT salario * 0.06 INTO v_desconto 
+    FROM funcionarios10 
+    WHERE nome = p_nome; 
+    
+    RETURN v_desconto;
+END;
+
+
+select inss_funcionario('Felipe') from dual;
+
+//traz todos o desconto de todos os funcionario
+select nome,inss_funcionario(nome) from funcionarios10 
