@@ -1,0 +1,98 @@
+//criando um atbela pra teste 
+
+create table alunos10(
+id number primary key,
+nome varchar2(30),
+turma varchar2(30),
+nota NUMBER
+);
+
+
+
+
+//Clica no nome da tela e arrasta para a tela e selecione a opção que deseja fazer 
+
+
+INSERT INTO alunos10 (
+    id,
+    nome,
+    turma,
+    nota
+) VALUES ( :v0,
+           :v1,
+           :v2,
+           :v3 );
+
+
+
+END; //não tem esse end
+
+
+
+//relebrando precedure
+
+CREATE OR REPLACE procedure prd_insert_alunos (p_id number, p_nome varchar2,p_turma varchar2,p_nota NUMBER)AS
+BEGIN
+INSERT INTO alunos10 (
+    id,
+    nome,
+    turma,
+    nota
+) VALUES ( p_id,
+           p_nome,
+           p_turma,
+           p_nota );
+
+COMMIT;
+
+end;
+
+
+
+
+// VENDO A TABELA VAZIA
+
+SELECT * FROM alunos10;
+
+
+
+
+//inserindo dados atraves da procedure (tem que inserir os nomes iguais)
+
+call prd_insert_alunos(1,'Manu', '2TDSPG',10);
+exec prd_insert_alunos(2,'Manu', '2TDSPG',9);
+execute prd_insert_alunos(3,'Manu', '2TDSPG',8);
+
+begin
+    prd_insert_alunos(4,'Manu', '2TDSPG',7);
+end;
+
+
+
+
+//pegando a media de notas
+
+SELECT nome, avg(nota) Media FROM alunos10
+group by nome
+
+
+//
+
+create function media_alunos(
+nome VARCHAR
+)return number is
+    v_media NUMBER;
+BEGIN
+SELECT avg(nota)INTO v_media FROM alunos10 GROUP BY nome; 
+return v_media;
+end;
+
+
+
+
+// chamando a função testando a função
+
+select media_alunos('Manu') from dual;
+
+
+
